@@ -1,0 +1,78 @@
+Ref: http://onevcat.com/2014/02/ios-test-with-kiwi/
+
+
+Kiwi和BDD的测试思想
+1、XCTest的问题
+（1）书写性和可读性上都不好
+（2）所有的测试都是由断言完成的，而很多时候断言的意义并不是特别的明确，
+     对于项目交付或者新的开发人员加入时，理解或者转换成本很大
+（3）难以进行mock或者stub
+
+2、BDD
+BDD提倡的是通过将测试语句转换为类似自然语言的描述，开发人员可以使用更符合大众语言的习惯来书写测试，
+这样不论在项目交接、交付，或者之后自己修改时，都可以顺利很多。
+
+一个典型的BDD的测试用例包括完整的三段式上下文，测试大多可以翻译为 Given..When..Then的格式。
+在objc中，现在比较流行的BDD框架有cedar，specta和Kiwi
+
+3、行为描述（Specs）和期望（Expectations）， Kiwi测试的基本结构
+传统测试的文件名一般以Tests为后缀，表示这个文件中含有一组测试，
+而在Kiwi中，一个测试文件所包含的是一组对于行为的描述（Spec）， 
+因此习惯上使用需要测试的目标类来作为名字，并以Spec作为文件名后缀。
+
+
+#import <Kiwi/Kiwi.h>
+
+SPEC_BEGIN(SimpleStringSpec)
+describe(@"SimpleString", ^{
+	context(@"when assigned to 'Hello world' ", ^{
+		NSString *greeting = @"Hello world";
+		it (@"should exist", ^{
+			[[gretting shouldNot] beNil];
+		});
+
+        it(@"should equal to 'Hello world'", ^{
+            [[greeting should] equal:@"Hello world"];
+        });
+	});
+});
+SPEC_END
+
+（1）、SPEC_BEGIN和SPEC_END都是宏，它们定义了一个KWSpec的子类, KWspec是XCTestCase的子类,并将其中的内容包装在一个函数中。
+（2）、describe描述需要测试的对象内容
+（3）、context描述测试上下文
+（4）、it中的内容是测试的本体，描述这个测试需要满足的条件
+以上构成了Kiwi测试中的行为描述。
+
+Kiwi中一些其他的行为描述关键字：
+
+beforeAll(aBlock);  -- 当前scope内部的所有的其他block运行之前调用一次
+afterAll(aBlock);   -- 当前scope内部的所有的其他block运行之后调用一次
+
+beforeEach(aBlock);  -- 在scope内的每个it之前调用一次，对于context的配置代码应该写在这里
+afterEach(aBlock);   -- 在scope内的每个it之后调用一次，用于清理测试后的代码
+
+specify(aBlock); -- 可以在里面直接书写不需要描述的测试
+
+pending(aString, aBlock);  -- 只打印一条log信息，不做测试。这个语句会给出一个警告，可以作为一开始集中书写行为描述时还未实现的测试的提示
+
+xit(aString, aBlock);  -- 和pending一样，另一种写法。因为在真正实现时测试时只需要将x删掉就是it，但是pending语意更明确，因此还是推荐pending
+
+实际的测试写在it里，是由一个一个的期望（Expectations）来进行描述的，期望相当于传统测试中的断言，
+要是运行的结果不能匹配期望，则测试失败。
+
+在Kiwi中期望（Expectations）都是由should或者shouldNot开头，并紧接着一个或多个判断的链式调用，
+大部分常见的是be或haveSomeCondition的形式。
+
+可以参看文档的这个页面（https://github.com/allending/Kiwi/wiki/Expectations）。另外，您还可以通过新建KWMatcher的子类，来简单地自定义自己和项目所需要的期望语句
+
+something important：
+期望描述的should或者shouldNot是作用在对象上的宏，因此对于标量，我们需要先将其装换为对象
+
+
+
+
+
+
+
+

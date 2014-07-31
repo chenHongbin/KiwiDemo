@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		30BA750151AE459486C94A13 /* libPods-BDDTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DDC3B7042B414D44A887A242 /* libPods-BDDTest.a */; };
+		59C4DB3F198A3428002A4C32 /* StubTestSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 59C4DB3E198A3428002A4C32 /* StubTestSpec.m */; };
+		59C4DB42198A3483002A4C32 /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = 59C4DB41198A3483002A4C32 /* Person.m */; };
 		59D0DF9719889D7000DC7351 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59D0DF9619889D7000DC7351 /* Foundation.framework */; };
 		59D0DF9919889D7000DC7351 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59D0DF9819889D7000DC7351 /* CoreGraphics.framework */; };
 		59D0DF9B19889D7000DC7351 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59D0DF9A19889D7000DC7351 /* UIKit.framework */; };
@@ -36,6 +38,9 @@
 
 /* Begin PBXFileReference section */
 		47F04E9353D143B2B0F0679D /* Pods-BDDTest.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BDDTest.xcconfig"; path = "Pods/Pods-BDDTest.xcconfig"; sourceTree = "<group>"; };
+		59C4DB3E198A3428002A4C32 /* StubTestSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StubTestSpec.m; sourceTree = "<group>"; };
+		59C4DB40198A3483002A4C32 /* Person.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
+		59C4DB41198A3483002A4C32 /* Person.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
 		59D0DF9319889D7000DC7351 /* BDDTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BDDTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		59D0DF9619889D7000DC7351 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		59D0DF9819889D7000DC7351 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -123,6 +128,8 @@
 				59D0DFA819889D7000DC7351 /* Main.storyboard */,
 				59D0DFAB19889D7000DC7351 /* ViewController.h */,
 				59D0DFAC19889D7000DC7351 /* ViewController.m */,
+				59C4DB40198A3483002A4C32 /* Person.h */,
+				59C4DB41198A3483002A4C32 /* Person.m */,
 				59D0DFAE19889D7100DC7351 /* Images.xcassets */,
 				59D0DF9D19889D7000DC7351 /* Supporting Files */,
 			);
@@ -144,6 +151,7 @@
 			isa = PBXGroup;
 			children = (
 				59D0DFCB1988ADA800DC7351 /* SimpleStringSpec.m */,
+				59C4DB3E198A3428002A4C32 /* StubTestSpec.m */,
 				59D0DFBC19889D7100DC7351 /* Supporting Files */,
 			);
 			path = BDDTestTests;
@@ -292,6 +300,7 @@
 			files = (
 				59D0DFAD19889D7000DC7351 /* ViewController.m in Sources */,
 				59D0DFA719889D7000DC7351 /* AppDelegate.m in Sources */,
+				59C4DB42198A3483002A4C32 /* Person.m in Sources */,
 				59D0DFA319889D7000DC7351 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -300,6 +309,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59C4DB3F198A3428002A4C32 /* StubTestSpec.m in Sources */,
 				59D0DFCC1988ADA800DC7351 /* SimpleStringSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

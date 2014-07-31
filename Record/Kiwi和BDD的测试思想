@@ -70,6 +70,91 @@ something important：
 期望描述的should或者shouldNot是作用在对象上的宏，因此对于标量，我们需要先将其装换为对象
 
 
+4、Stub（桩程序）和Mock（模拟对象）的基本概念
+
+tip: 我们编写生产代码让它能够工作其实并不很难，项目中编码方面的工作难点往往在于框架搭建以及随着项目发展如何保持代码优雅可读可维护。
+     而测试相比起业务代码的编写一般来说会更难一些，很多时候你会发现有些代码是“无法测试”的，因为代码之间存在较高的耦合程度，
+     因此绕不开对于其他类的依赖，来对某个类单独测试其正确性。我们不能依赖于一个没有经过测试的类来对另一个需要测试的类进行测试
+
+
+(1)、Stub 桩程序
+用一种最简单的语言来“描述”那些依赖类的行为，而避免对它们进行具体实现，这样就能最大限度地避免出错。
+
+// WeatherRecorder.m
+- (void)writeResultToDatabaseWithTemprature:(NSInteger)temprature 
+                                   humidity:(NSInteger)humidity
+{
+    id result = [self.weatherForecaster resultWithTemprature:temprature humidity:humidity];
+    [self write:result];
+}
+
+Q:对于这样的方法和相应地WeatherRecorder应该如何测试呢？ 
+
+  这个方法依赖了weatherForecaster的计算方法，而我们这里关心的更多的是write这个方法的正确性
+  （算法的测试应该被分开写在对应的测试中）对于计算的细节和结果我们其实并不关心，但是这个方法本身和算法
+  耦合在了一起。一个完美的解决的方案是，我们人为地指定计算的结果，然后测试数据库的写入操作。
+  人为地让一个对象对某个方法返回我们事先规定好的值。这就叫Stub(桩程序)
+
+
+tips: 对于Kiwi的stub, 需要注意的是它不是永久有效的，在每个it block的结尾stub都会被清空，超出范围的方法
+调用将不会被stub截取到。
+
+
+（2）、Mock 模拟对象
+ Mock是一个非常容易和stub混淆的概念。简单来说，我们可以将mock看做是一种更全面和更智能的stub。
+
+ a、Mock其实就是一个对象，它是对现有类的行为的一种模拟，或者对现有接口实现的模拟。
+    在objc的OOP中，类或者接口就是指导对象行为的蓝图，而Mock则遵循这些蓝图并模拟他们的实例对象。
+    从这方面来说，Mock与Stub最大的区别在于Stub只是简单地方法替换，而不涉及新的对象，被Stub的对象
+    可以是业务代码中的真正的对象。而Mock行为本身产生新的对象，并遵循类定义相应某些方法。
+
+ b、更智能，基础上来说，和Stub很相似，我们可以为创造的mock定义在某种输入和方法调用下的输出，更进一步，我们
+    还可以为Mock设定期望（准确的说，是我们一定会为Mock设定期望，这也是Mock最常见的用例）。 
+    即，我们可以为一个 mock 指定这样的期望："这个 mock 应该收到以 X 为参数的 Y 方法，并规定它的返回为 Z"。
+    其中"应该收到以 X 为参数的 Y 方法"这个期望会在测试与其不符合时让你的测试失败，而“返回 Z” 这个描述行为更接近于一种 stub 的定义
+
+（3）、参数捕获:
+
+ 有时候我们会对Mock对象的输入参数感兴趣，比如期望某个参数符合一定要求，但是对于Mock而言一般我们是通过调用别的方法来
+ 验证Mock是否被调用的，所以很可能无法拿到传给mock对象的参数，这种情况下我们就可以使用参数捕获来获取输入的参数。
+
+ KWCaptureSpy *spy = [weatherForecasterMock captureArgument:@selector(resultWithTemprature:humidity:) atIndex:0];
+
+（4）、异步测试
+
+ 异步测试是为了对后台线程的结果进行期望检验时所需要的，Kiwi可以对某个对象的未来的状况书写期望，
+ 并进行检验，通过将要检验的对象加上"expectFutureValue" 然后使用"shouldEventually"即可 
+
+[[expectFutureValue(myObject) shouldEventually] beNonNil];
+
+[[expectFutureValue(theValue(myBool)) shouldEventually] beYes];
+
+context(@"Fetching service data", ^{
+	it(@"should receive data within one second", ^{
+		__block NSString *fetchedData = nil;
+		[[LRRestly client] get:@"http://www.example.com" withBlock:^(LRRestlyResponse *r){
+			NSLog(@"That's it! %@", [r asString]);
+			fetchedData = [r asString];
+		}];
+		[[expectFutureValue(fetchedData) shouldEventually] beNonNil];
+	});
+});
+
+其实没什么神奇的，就是生成了一个延时的验证，在一定时间间隔后再对观测的对象进行检查。
+这个时间间隔默认是 1 秒，如果你需要其他的时间间隔的话，可以使用 shouldEventuallyBeforeTimingOutAfter 版本：
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
